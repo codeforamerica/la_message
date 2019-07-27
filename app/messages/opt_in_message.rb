@@ -39,6 +39,20 @@ class OptInMessage
     clean_reply = reply.downcase.strip
     if clean_reply.match Regexp.union([/\Ay\z/, /yes/i])
       contact.update opted_in: true
+
+      message = "You have opted in to text messages about your Medicaid case. "\
+                "You can opt out of this service at any time by replying with STOP."
+
+      SmsService.send_message(
+        phone_number: contact.phone_number,
+        message: message
+      )
+
+      contact.messages.create(
+        message_type: self.class.name,
+        to_phone_number: contact.phone_number,
+        body: message
+      )
     elsif clean_reply.match Regexp.union([/\An\z/, /no/i])
     end
   end

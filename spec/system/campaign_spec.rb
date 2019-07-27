@@ -17,11 +17,19 @@ RSpec.describe "Campaign", type: :system do
     expect(SmsService).to have_received(:send_message).with(phone_number: contact.phone_number, message: a_string_including("Louisiana Medicaid is testing out a text message reminder program."))
     expect(contact.messages.reload.last.message_type).to eq "OptInMessage"
 
+    RSpec::Mocks.space.proxy_for(SmsService).reset
+    allow(SmsService).to receive(:send_message)
+
     # they affirmatively say yes
     OptInMessage.new(contact).on_reply("Yes")
     expect(contact.reload.opted_in).to eq true
-    expect(contact.messages.reload.last.message_type).to eq nil
-    expect(contact.messages.reload.last.inbound?).to eq true
+    expect(SmsService).to have_received(:send_message).with(phone_number: contact.phone_number, message: a_string_including("You have opted in to text messages about your Medicaid case."))
+
+    inbound_message, confirmation_message = contact.messages.reload.last(2)
+    expect(inbound_message.message_type).to eq nil
+    expect(inbound_message.inbound?).to eq true
+
+    expect(confirmation_message.message_type).to eq "OptInMessage"
 
     RSpec::Mocks.space.proxy_for(SmsService).reset
     (1..9).each do |day|
