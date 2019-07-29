@@ -19,7 +19,8 @@ RSpec.describe "Campaign", type: :system do
     )
 
     # send them an opt-in message
-    OptInMessage.send_to_contacts
+    CampaignMessage.send_all
+
     expect(twilio_messages).to have_received(:create) do |args|
       expect(args[:body]).to include "Louisiana Medicaid is testing out a text message reminder program."
     end
@@ -47,7 +48,7 @@ RSpec.describe "Campaign", type: :system do
         RSpec::Mocks.space.proxy_for(twilio_messages).reset
         allow(twilio_messages).to receive(:create).and_return(twilio_response)
 
-        RenewalNoticeMessage.send_to_contacts
+        CampaignMessage.send_all
 
         expect(twilio_messages).not_to have_received(:create)
       end
@@ -57,12 +58,11 @@ RSpec.describe "Campaign", type: :system do
       RSpec::Mocks.space.proxy_for(twilio_messages).reset
       allow(twilio_messages).to receive(:create).and_return(twilio_response)
 
-      RenewalNoticeMessage.send_to_contacts
+      CampaignMessage.send_all
 
       expect(twilio_messages).to have_received(:create) do |args|
         expect(args[:body]).to include "It is time to renew your household's Medicaid coverage."
       end
-
       expect(contact.messages.reload.last.message_type).to eq "RenewalNoticeMessage"
     end
 
@@ -72,7 +72,7 @@ RSpec.describe "Campaign", type: :system do
         RSpec::Mocks.space.proxy_for(twilio_messages).reset
         allow(twilio_messages).to receive(:create).and_return(twilio_response)
 
-        ListOfDocumentsMessage.send_to_contacts
+        CampaignMessage.send_all
 
         expect(twilio_messages).not_to have_received(:create)
       end
@@ -82,12 +82,11 @@ RSpec.describe "Campaign", type: :system do
       RSpec::Mocks.space.proxy_for(twilio_messages).reset
       allow(twilio_messages).to receive(:create).and_return(twilio_response)
 
-      ListOfDocumentsMessage.send_to_contacts
+      CampaignMessage.send_all
 
       expect(twilio_messages).to have_received(:create) do |args|
         expect(args[:body]).to include "To complete your Medicaid renewal, please submit the following documents by"
       end
-
       expect(contact.messages.reload.last.message_type).to eq "ListOfDocumentsMessage"
     end
   end

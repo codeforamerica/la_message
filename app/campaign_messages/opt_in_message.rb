@@ -1,10 +1,8 @@
-class OptInMessage
+class OptInMessage < CampaignMessage
   attr_reader :contact
 
-  def self.send_to_contacts
-    Contact.where(opted_in: nil).find_each do |contact|
-      new(contact).send_message
-    end
+  def self.recipients
+    Contact.not_received_message(self).where(opted_in: nil)
   end
 
   def initialize(contact)

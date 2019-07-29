@@ -1,10 +1,8 @@
-class ListOfDocumentsMessage
+class ListOfDocumentsMessage < CampaignMessage
   attr_reader :contact
 
-  def self.send_to_contacts
-    Contact.where("created_at < ?", 20.days.ago).find_each do |contact|
-      new(contact).send_message
-    end
+  def self.recipients
+    Contact.opted_in.not_received_message(self).where("contacts.created_at < ?", 20.days.ago)
   end
 
   def initialize(contact)
