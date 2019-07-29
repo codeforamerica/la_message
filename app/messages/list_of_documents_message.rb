@@ -12,20 +12,16 @@ class ListOfDocumentsMessage
   end
 
   def send_message
-    message = "Louisiana Medicaid is testing out a text message reminder program. "\
-              "Would you like to receive reminders, notices and confirmations about the enrollment and renewal processes? "\
-              "These texts will b in addition to any letters and calls you already receive. "\
-              "Please reply with YES or NO. You can opt out of the service at any time."
+    body = "To complete your Medicaid renewal, please submit the following documents by DATE:\n\n"\
+           "You can drop them off at a Medicaid office, or submit them online at sspweb.lameds.ldh.la.gov/selfservice/. "\
+           "You can also email them (along with your case number) to mymedicaid@la.gov."
 
-    SmsService.send_message(
-      phone_number: contact.phone_number,
-      message: message
-    )
-
-    contact.messages.create(
+    message = contact.messages.create!(
       message_type: self.class.name,
       to_phone_number: contact.phone_number,
-      body: message,
+      body: body
     )
+
+    SmsService.send_message(message)
   end
 end

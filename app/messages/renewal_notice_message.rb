@@ -12,20 +12,17 @@ class RenewalNoticeMessage
   end
 
   def send_message
-    message = "It is time to renew your household's Medicaid coverage. "\
-              "To keep getting Medicaid, complete your renewal by #{contact.renewal_date}. "\
-              "You can now renew online at sspweb.lameds.ldh.la.gov/selfservice "\
-              "You can also renew over the phone on week days 8am-5pm at 1-888-342-6207."
+    body = "It is time to renew your household's Medicaid coverage. "\
+            "To keep getting Medicaid, complete your renewal by #{contact.renewal_date}. "\
+            "You can now renew online at sspweb.lameds.ldh.la.gov/selfservice "\
+            "You can also renew over the phone on week days 8am-5pm at 1-888-342-6207."
 
-    SmsService.send_message(
-      phone_number: contact.phone_number,
-      message: message
-    )
-
-    contact.messages.create(
+    message = contact.messages.create!(
       message_type: self.class.name,
       to_phone_number: contact.phone_number,
-      body: message
+      body: body
     )
+
+    SmsService.send_message(message)
   end
 end

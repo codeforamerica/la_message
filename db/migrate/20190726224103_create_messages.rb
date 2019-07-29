@@ -9,6 +9,7 @@ class CreateMessages < ActiveRecord::Migration[5.2]
       t.text :body
       t.text :message_type
       t.boolean :outbound
+      t.text :twilio_id
     end
   end
 end

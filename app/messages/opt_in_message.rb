@@ -12,47 +12,36 @@ class OptInMessage
   end
 
   def send_message
-    message = "Louisiana Medicaid is testing out a text message reminder program. "\
-              "Would you like to receive reminders, notices and confirmations about the enrollment and renewal processes? "\
-              "These texts will b in addition to any letters and calls you already receive. "\
-              "Please reply with YES or NO. You can opt out of the service at any time."
+    body = "Louisiana Medicaid is testing out a text message reminder program. "\
+           "Would you like to receive reminders, notices and confirmations about the enrollment and renewal processes? "\
+           "These texts will be in addition to any letters and calls you already receive. "\
+           "Please reply with YES or NO. You can opt out of the service at any time."
 
-    SmsService.send_message(
-      phone_number: contact.phone_number,
-      message: message
-    )
-
-    contact.messages.create(
+    message = contact.messages.create!(
       message_type: self.class.name,
       to_phone_number: contact.phone_number,
-      body: message,
+      body: body
     )
+
+    SmsService.send_message(message)
   end
 
-  def on_reply(reply)
-    contact.messages.create(
-      from_phone_number: contact.phone_number,
-      body: reply,
-      inbound: true
-    )
+  def on_reply(message)
+    clean_reply = message.body.downcase.strip
 
-    clean_reply = reply.downcase.strip
     if clean_reply.match Regexp.union([/\Ay\z/, /yes/i])
       contact.update opted_in: true
 
-      message = "You have opted in to text messages about your Medicaid case. "\
+      body = "You have opted in to text messages about your Medicaid case. "\
                 "You can opt out of this service at any time by replying with STOP."
 
-      SmsService.send_message(
-        phone_number: contact.phone_number,
-        message: message
-      )
-
-      contact.messages.create(
+      message = contact.messages.create!(
         message_type: self.class.name,
         to_phone_number: contact.phone_number,
-        body: message
+        body: body
       )
+
+      SmsService.send_message(message)
     elsif clean_reply.match Regexp.union([/\An\z/, /no/i])
     end
   end

@@ -1,5 +1,5 @@
 class Message < ApplicationRecord
-  belongs_to :contact
+  belongs_to :contact, optional: true
 
   def inbound?
     !outbound? unless outbound.nil?

@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2019_07_26_224103) do
     t.text "body"
     t.text "message_type"
     t.boolean "outbound"
+    t.text "twilio_id"
     t.index ["contact_id"], name: "index_messages_on_contact_id"
   end
 
