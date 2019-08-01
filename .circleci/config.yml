@@ -1,0 +1,63 @@
+---
+
+defaults: &defaults
+  working_directory: ~/project
+  docker:
+    - image: circleci/ruby:2.6.3-node-browsers
+      environment:
+        PGHOST: localhost
+        PGUSER: la_message
+        RAILS_ENV: test
+    - image: postgres:10
+      environment:
+        POSTGRES_USER: la_message
+        POSTGRES_DB: la_message_test
+        POSTGRES_PASSWORD: ""
+
+version: 2
+jobs:
+  install_dependencies:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore bundle cache
+          keys:
+            - v1-project-{{ arch }}-{{ checksum "Gemfile.lock" }}
+            - v1-project-{{ arch }}-
+      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --full-index
+      - save_cache:
+          name: Store bundle cache
+          key: v1-project-{{ arch }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - ./vendor/bundle
+
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore bundle cache
+          keys:
+            - v1-project-{{ arch }}-{{ checksum "Gemfile.lock" }}
+            - v1-project-{{ arch }}-
+      - run: bundle --path vendor/bundle
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: bundle exec rake db:test:prepare
+      - run: bin/rails assets:precompile
+      - run: mkdir ~/rspec
+      - run: bundle exec rspec --format documentation --format RspecJunitFormatter -o ~/rspec/rspec.xml
+      - store_test_results:
+          path: ~/rspec
+      - store_artifacts:
+          path: tmp/screenshots
+          destination: screenshots
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - install_dependencies
+      - build:
+          requires:
+            - install_dependencies
