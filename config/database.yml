@@ -23,13 +23,13 @@ default: &default
 
 development:
   <<: *default
-  database: medicaid_messages_development
+  database: la_message_development
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
   # When left blank, postgres will use the default role. This is
   # the same name as the operating system user that initialized the database.
-  #username: medicaid_messages
+  #username: la_message
 
   # The password associated with the postgres role (username).
   #password:
@@ -57,7 +57,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: medicaid_messages_test
+  database: la_message_test
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -80,6 +80,6 @@ test:
 #
 production:
   <<: *default
-  database: medicaid_messages_production
-  username: medicaid_messages
-  password: <%= ENV['MEDICAID_MESSAGES_DATABASE_PASSWORD'] %>
+  database: la_message_production
+  username: la_message
+  password: <%= ENV['LA_MESSAGE_DATABASE_PASSWORD'] %>
