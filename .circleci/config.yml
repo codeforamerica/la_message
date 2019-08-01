@@ -20,6 +20,7 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - run: gem install bundler -v $(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -1 | tr -d " ")
       - restore_cache:
           name: Restore bundle cache
           keys:
