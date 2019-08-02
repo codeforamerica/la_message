@@ -1,48 +1,59 @@
 ---
 
-defaults: &defaults
-  working_directory: ~/project
-  docker:
-    - image: circleci/ruby:2.6.3-node-browsers
-      environment:
-        PGHOST: localhost
-        PGUSER: la_message
-        RAILS_ENV: test
-    - image: postgres:10
-      environment:
-        POSTGRES_USER: la_message
-        POSTGRES_DB: la_message_test
-        POSTGRES_PASSWORD: ""
+version: 2.1
 
-version: 2
-jobs:
-  install_dependencies:
-    <<: *defaults
+executors:
+  rails_executor:
+    working_directory: ~/project
+    docker:
+      - image: circleci/ruby:2.6.3-node-browsers
+        environment:
+          BUNDLE_JOBS: 4
+          BUNDLE_RETRY: 3
+          BUNDLE_PATH: vendor/bundle
+          PGHOST: localhost
+          PGUSER: la_message
+          RAILS_ENV: test
+      - image: circleci/postgres:10-postgis
+        environment:
+          POSTGRES_USER: la_message
+          POSTGRES_DB: la_message_test
+          POSTGRES_PASSWORD: ""
+
+commands:
+  setup_bundler:
+    description: "Set Bundler dependencies"
     steps:
-      - checkout
       - run: gem install bundler -v $(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -1 | tr -d " ")
       - restore_cache:
-          name: Restore bundle cache
           keys:
-            - v1-project-{{ arch }}-{{ checksum "Gemfile.lock" }}
-            - v1-project-{{ arch }}-
-      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --full-index
+            - v1-bundler-{{ arch }}-{{ checksum "Gemfile.lock" }}
+            - v1-bundler-{{ arch }}-
+      - run: bundle install --frozen && bundle clean
       - save_cache:
-          name: Store bundle cache
-          key: v1-project-{{ arch }}-{{ checksum "Gemfile.lock" }}
+          key: v1-bundler-{{ arch }}-{{ checksum "Gemfile.lock" }}
           paths:
+            - ~/.bundle
             - ./vendor/bundle
 
-  build:
-    <<: *defaults
+  wait_for_database:
+    description: "Wait for database to become available"
+    steps:
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+jobs:
+  install_dependencies:
+    executor: rails_executor
     steps:
       - checkout
-      - restore_cache:
-          name: Restore bundle cache
-          keys:
-            - v1-project-{{ arch }}-{{ checksum "Gemfile.lock" }}
-            - v1-project-{{ arch }}-
-      - run: bundle --path vendor/bundle
+      - setup_bundler
+
+  build:
+    executor: rails_executor
+    steps:
+      - checkout
+      - setup_bundler
+      - wait_for_database
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run: bundle exec rake db:test:prepare
       - run: bin/rails assets:precompile

@@ -34,6 +34,7 @@ group :test do
   gem 'capybara-email'
   gem 'factory_bot_rails'
   gem 'launchy', require: false
+  gem 'rspec_junit_formatter'
   gem 'selenium-webdriver'
   gem 'webmock'
 end
