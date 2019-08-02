@@ -1,0 +1,6 @@
+.env
+/tmp
+.git
+/storage
+/log
+

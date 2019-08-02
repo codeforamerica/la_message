@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 3
+  revisionHistoryLimit: 1
+  minReadySeconds: 10
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: 083756828350.dkr.ecr.us-east-1.amazonaws.com/la-message:latest
+          imagePullPolicy: Always
+          command: ['sh', '-c', "rails server --port 3000 --pid /tmp/server.pid"]
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 60
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 60
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "250m"
+            requests:
+              memory: "125Mi"
+              cpu: "150m"
+          envFrom:
+            - secretRef:
+                name: rails-secrets
+          env:
+            - name: RAILS_ENV
+              value: "production"
