@@ -5,12 +5,18 @@ class SmsService
     "is not a mobile number"
   ].freeze
 
-  def self.send_message(message)
+  def self.send_sms(to:, body:)
     twilio_client = Twilio::REST::Client.new
-
-    response = twilio_client.messages.create(
+    twilio_client.messages.create(
       messaging_service_sid: Rails.application.secrets.twilio_message_service,
       status_callback: nil,
+      to: to,
+      body: body
+    )
+  end
+
+  def self.send_message(message)
+    response = send_sms(
       to: format_phone_number(message.to_phone_number),
       body: message.body
     )
