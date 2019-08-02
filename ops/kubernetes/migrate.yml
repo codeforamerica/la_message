@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrate
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: 083756828350.dkr.ecr.us-east-1.amazonaws.com/la-message:latest
+          command: ['rails']
+          args: ['db:migrate']
+          envFrom:
+            - secretRef:
+                name: rails-secrets
+          env:
+            - name: RAILS_ENV
+              value: "production"

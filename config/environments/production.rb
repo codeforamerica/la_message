@@ -42,7 +42,8 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
+  config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/healthcheck" } } }
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
@@ -56,7 +57,7 @@ Rails.application.configure do
 
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "medicaid_messages_#{Rails.env}"
+  # config.active_job.queue_name_prefix = "la_message_#{Rails.env}"
 
   config.action_mailer.perform_caching = false
 
