@@ -11,6 +11,7 @@ module Twilio
 
       message = Message.create!(
         contact: contact,
+        twilio_id: params["MessageSid"],
         from_phone_number: params["From"],
         to_phone_number: params["To"],
         body: incoming_text_and_images,

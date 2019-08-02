@@ -10,4 +10,50 @@ RSpec.describe OptInMessage do
       expect(described_class.recipients.to_a).to contain_exactly(contact_nil_opt)
     end
   end
+
+  describe '#on_reply' do
+    let!(:contact) { Contact.create! opted_in: nil }
+
+    before do
+      allow(SmsService).to receive(:send_message)
+    end
+
+    context 'affirmative response' do
+      it 'sends a response message' do
+        message = Message.new(contact: contact, body: 'yes')
+        described_class.new(contact).on_reply(message)
+
+        expect(SmsService).to have_received(:send_message) do |message|
+          expect(message.body).to include "You have opted in"
+        end
+      end
+
+      ["yes", "y", " y ", "Yes!", "and yes"].each do |body|
+        it "reply of '#{body}' updates contact opt in as true" do
+          message = Message.new(contact: contact, body: body)
+          described_class.new(contact).on_reply(message)
+          expect(contact.opted_in).to eq true
+        end
+      end
+    end
+
+    context 'negative response' do
+      it 'sends a response message' do
+        message = Message.new(contact: contact, body: 'no')
+        described_class.new(contact).on_reply(message)
+
+        expect(SmsService).to have_received(:send_message) do |message|
+          expect(message.body).to include "You have opted out"
+        end
+      end
+
+      ["no", "n", " n ", "No!", "and no"].each do |body|
+        it "reply of '#{body}' updates contact opt in as false" do
+          message = Message.new(contact: contact, body: body)
+          described_class.new(contact).on_reply(message)
+          expect(contact.opted_in).to eq false
+        end
+      end
+    end
+  end
 end

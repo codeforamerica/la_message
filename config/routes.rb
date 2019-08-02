@@ -5,5 +5,6 @@ Rails.application.routes.draw do
 
   namespace :twilio, module: :twilio do
     resource :incoming, only: :create
+    resource :status, only: :create
   end
 end
