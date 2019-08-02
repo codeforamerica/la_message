@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_26_224103) do
+ActiveRecord::Schema.define(version: 2019_08_02_185517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,10 +18,11 @@ ActiveRecord::Schema.define(version: 2019_07_26_224103) do
   create_table "contacts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "name"
     t.text "phone_number"
     t.boolean "opted_in"
     t.date "renewal_date"
+    t.text "first_name"
+    t.text "last_name"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -34,7 +35,11 @@ ActiveRecord::Schema.define(version: 2019_07_26_224103) do
     t.text "message_type"
     t.boolean "outbound"
     t.text "twilio_id"
+    t.text "status"
+    t.integer "error_code"
+    t.text "error_message"
     t.index ["contact_id"], name: "index_messages_on_contact_id"
+    t.index ["twilio_id"], name: "index_messages_on_twilio_id", unique: true
   end
 
 end

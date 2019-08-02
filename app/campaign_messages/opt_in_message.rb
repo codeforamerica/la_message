@@ -31,7 +31,7 @@ class OptInMessage < CampaignMessage
       contact.update opted_in: true
 
       body = "You have opted in to text messages about your Medicaid case. "\
-                "You can opt out of this service at any time by replying with STOP."
+             "You can opt out of this service at any time by replying with STOP."
 
       message = contact.messages.create!(
         message_type: self.class.name,
@@ -41,6 +41,17 @@ class OptInMessage < CampaignMessage
 
       SmsService.send_message(message)
     elsif clean_reply.match Regexp.union([/\An\z/, /no/i])
+      contact.update opted_in: false
+
+      body = "You have opted out. You will not receive any more text messages from Medicaid."
+
+      message = contact.messages.create!(
+        message_type: self.class.name,
+        to_phone_number: contact.phone_number,
+        body: body
+      )
+
+      SmsService.send_message(message)
     end
   end
 end

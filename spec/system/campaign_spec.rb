@@ -5,7 +5,6 @@ RSpec.describe "Campaign", type: :system do
 
   let(:twilio_client) { double(Twilio::REST::Client, messages: twilio_messages) }
   let(:twilio_messages) { double(Twilio::REST::ListResource, create: twilio_response) }
-  let(:twilio_response) { OpenStruct.new(sid: 'SM123') }
 
   before do
     allow(Twilio::REST::Client).to receive(:new).and_return(twilio_client)
@@ -13,7 +12,7 @@ RSpec.describe "Campaign", type: :system do
 
   it "affirmative opt-in and campaign" do
     contact = Contact.create(
-      name: "Brian",
+      first_name: "Brian",
       phone_number: "5551231234",
       renewal_date: "2019/01/15"
     )
@@ -91,11 +90,36 @@ RSpec.describe "Campaign", type: :system do
     end
   end
 
+  it 'negative opt out' do
+    contact = Contact.create(
+      first_name: "Nate",
+      phone_number: "5551231234",
+      renewal_date: "2019/01/15"
+    )
+
+    CampaignMessage.send_all
+
+    RSpec::Mocks.space.proxy_for(twilio_messages).reset
+    allow(twilio_messages).to receive(:create).and_return(twilio_response)
+
+    incoming_sms(phone_number: contact.phone_number, body: "no")
+
+    expect(contact.reload.opted_in).to eq false
+    expect(twilio_messages).to have_received(:create) do |args|
+      expect(args[:body]).to include "You have opted out."
+    end
+  end
+
   def incoming_sms(phone_number:, body:)
     post twilio_incoming_url, params: {
       "Body": body,
       "To": "+15555555555",
-      "From": "+1#{phone_number}",
+      "From": phone_number
     }
+  end
+
+  def twilio_response
+    @number = @number ? @number + 1 : 1
+    OpenStruct.new(sid: @number)
   end
 end
