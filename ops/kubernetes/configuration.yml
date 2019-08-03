@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rails-config
+data:
+  RAILS_ENV: "production"
+  RAILS_LOG_TO_STDOUT: "enabled"
+  RAILS_SERVE_STATIC_FILES: "enabled"
+  WEB_CONCURRENCY: "4"
+  RAILS_MAX_THREADS: "5"
