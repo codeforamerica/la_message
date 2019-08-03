@@ -30,3 +30,7 @@ deploy: docker-build docker-push kube-migrate kube-restart
 
 kube-bash:
 	kubectl exec -it $(WEB_POD) -- /bin/bash
+
+kube-copy-to-remote:
+	kubectl cp $(FROM) $(WEB_POD):$(TO)
+

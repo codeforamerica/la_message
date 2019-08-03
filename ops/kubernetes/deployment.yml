@@ -47,6 +47,5 @@ spec:
           envFrom:
             - secretRef:
                 name: rails-secrets
-          env:
-            - name: RAILS_ENV
-              value: "production"
+            - configMapRef:
+                name: rails-config
