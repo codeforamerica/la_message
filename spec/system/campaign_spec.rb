@@ -14,7 +14,7 @@ RSpec.describe "Campaign", type: :system do
     contact = Contact.create(
       first_name: "Brian",
       phone_number: "5551231234",
-      renewal_date: "2019/01/15"
+      renewal_date: "2019/01/05"
     )
 
     # send them an opt-in message
@@ -60,7 +60,8 @@ RSpec.describe "Campaign", type: :system do
       CampaignMessage.send_all
 
       expect(twilio_messages).to have_received(:create) do |args|
-        expect(args[:body]).to include "It is time to renew your household's Medicaid coverage."
+        expect(args[:body]).to include "It's time to renew your household's Medicaid coverage."
+        expect(args[:body]).to include "January 5"
       end
       expect(contact.messages.reload.last.message_type).to eq "RenewalNoticeMessage"
     end
