@@ -10,8 +10,8 @@ class RenewalNoticeMessage < CampaignMessage
   end
 
   def send_message
-    body = "It is time to renew your household's Medicaid coverage. "\
-            "To keep getting Medicaid, complete your renewal by #{contact.renewal_date}. "\
+    body = "It's time to renew your household's Medicaid coverage. "\
+            "To keep getting Medicaid, complete your renewal by #{renewal_date}. "\
             "You can now renew online at sspweb.lameds.ldh.la.gov/selfservice "\
             "You can also renew over the phone on week days 8am-5pm at 1-888-342-6207."
 
@@ -22,5 +22,11 @@ class RenewalNoticeMessage < CampaignMessage
     )
 
     SmsService.send_message(message)
+  end
+
+  private
+
+  def renewal_date
+    contact.renewal_date.strftime("%B %-d")
   end
 end
