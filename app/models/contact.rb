@@ -3,6 +3,7 @@
 # Table name: contacts
 #
 #  id           :bigint           not null, primary key
+#  carrier_type :text
 #  first_name   :text
 #  last_name    :text
 #  opted_in     :boolean
