@@ -18,7 +18,8 @@ class OptInMessage < CampaignMessage
     message = contact.messages.create!(
       message_type: self.class.name,
       to_phone_number: contact.phone_number,
-      body: body
+      body: body,
+      outbound: true
     )
 
     SmsService.send_message(message)
@@ -48,7 +49,8 @@ class OptInMessage < CampaignMessage
       message = contact.messages.create!(
         message_type: self.class.name,
         to_phone_number: contact.phone_number,
-        body: body
+        body: body,
+        outbound: true
       )
 
       SmsService.send_message(message)
