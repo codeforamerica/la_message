@@ -65,11 +65,21 @@ jobs:
           path: tmp/screenshots
           destination: screenshots
 
+  lint:
+    executor: rails_executor
+    steps:
+      - checkout
+      - setup_bundler
+      - run: bin/lint
+
 workflows:
   version: 2
   build_and_deploy:
     jobs:
       - install_dependencies
       - build:
+          requires:
+            - install_dependencies
+      - lint:
           requires:
             - install_dependencies

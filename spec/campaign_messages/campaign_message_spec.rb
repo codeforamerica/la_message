@@ -6,7 +6,7 @@ RSpec.describe CampaignMessage do
       expect(CampaignMessage.all_message_classes).to contain_exactly(
                                                            ListOfDocumentsMessage,
                                                            OptInMessage,
-                                                           RenewalNoticeMessage,
+                                                           RenewalNoticeMessage
                                                          )
     end
   end

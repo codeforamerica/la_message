@@ -17,9 +17,8 @@ class Contact < ApplicationRecord
   has_many :messages, -> { order(created_at: :asc) }
 
   scope :opted_in, -> { where(opted_in: true) }
-  scope :received_message, -> (message_class) { joins(:messages).where(messages: { message_type: message_class.name }).distinct }
-  scope :not_received_message, -> (message_class) { where.not(id: received_message(message_class).select(:id)) }
-
+  scope :received_message, ->(message_class) { joins(:messages).where(messages: { message_type: message_class.name }).distinct }
+  scope :not_received_message, ->(message_class) { where.not(id: received_message(message_class).select(:id)) }
 
   def phone_number=(value)
     super(PhoneNumber.format(value))

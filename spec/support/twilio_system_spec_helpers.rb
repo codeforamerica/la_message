@@ -8,7 +8,7 @@ module TwilioSystemSpecHelpers
     post twilio_incoming_url, params: {
       "Body": body,
       "To": "+15555555555",
-      "From": phone_number
+      "From": phone_number,
     }
   end
 end

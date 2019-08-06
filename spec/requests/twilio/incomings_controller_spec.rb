@@ -14,18 +14,11 @@ RSpec.describe Twilio::IncomingsController do
     end
 
     context 'when there is an expected reply' do
-      class TestReplyMessage
-        def initialize(contact)
-        end
-
-        def on_reply(message)
-        end
-      end
-
       let(:contact) { Contact.create first_name: 'test', phone_number: '16666666666' }
       let(:test_reply_message) { instance_double TestReplyMessage, on_reply: nil }
 
       before do
+        stub_const('TestReplyMessage', Class.new(CampaignMessage))
         allow(TestReplyMessage).to receive(:new).and_return(test_reply_message)
         Message.create contact: contact, outbound: true, message_type: 'TestReplyMessage'
       end

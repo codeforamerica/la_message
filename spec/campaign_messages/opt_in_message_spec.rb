@@ -4,7 +4,13 @@ RSpec.describe OptInMessage do
   describe '.recipients' do
     let!(:contact_nil_opt) { Contact.create! opted_in: nil }
     let!(:contact_false_opt) { Contact.create! opted_in: false }
-    let!(:contact_received_message) { Contact.create!.tap { |c| Message.create! contact: c, message_type: described_class.name; Message.create! contact: c, message_type: nil;  Message.create! contact: c, message_type: 'SomeMessage'} }
+    let!(:contact_received_message) do
+      Contact.create!.tap do |c|
+        Message.create!(contact: c, message_type: described_class.name)
+        Message.create!(contact: c, message_type: nil)
+        Message.create!(contact: c, message_type: 'SomeMessage')
+      end
+    end
 
     it 'only sends to contacts who have nil and have not received the message' do
       expect(described_class.recipients.to_a).to contain_exactly(contact_nil_opt)
@@ -20,8 +26,8 @@ RSpec.describe OptInMessage do
 
     context 'affirmative response' do
       it 'sends a response message' do
-        message = Message.new(contact: contact, body: 'yes')
-        described_class.new(contact).on_reply(message)
+        reply_message = Message.new(contact: contact, body: 'yes')
+        described_class.new(contact).on_reply(reply_message)
 
         expect(SmsService).to have_received(:send_message) do |message|
           expect(message.body).to include "You have opted in"
@@ -36,11 +42,11 @@ RSpec.describe OptInMessage do
         end
       end
     end
-
+    
     context 'negative response' do
       it 'sends a response message' do
-        message = Message.new(contact: contact, body: 'no')
-        described_class.new(contact).on_reply(message)
+        reply_message = Message.new(contact: contact, body: 'no')
+        described_class.new(contact).on_reply(reply_message)
 
         expect(SmsService).to have_received(:send_message) do |message|
           expect(message.body).to include "You have opted out"
