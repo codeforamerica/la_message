@@ -2,7 +2,7 @@ class SmsService
   IGNORABLE_ERROR_MESSAGES = [
     "violates a blacklist rule",
     "is not a valid phone number",
-    "is not a mobile number"
+    "is not a mobile number",
   ].freeze
 
   def self.send_message(message)

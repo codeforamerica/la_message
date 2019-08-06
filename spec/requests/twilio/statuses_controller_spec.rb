@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Twilio::IncomingsController do
+RSpec.describe Twilio::StatusesController do
   describe '#create' do
     it 'updates the message' do
       message = Message.create! to_phone_number: '+15555555555', twilio_id: "SM12345"

@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.describe "Renewal Message", type: :system do
   include ActiveSupport::Testing::TimeHelpers
 
-  let(:twilio_client) { double(Twilio::REST::Client, messages: twilio_messages) }
-  let(:twilio_messages) { double(Twilio::REST::ListResource, create: twilio_response) }
+  let(:twilio_client) { instance_double(Twilio::REST::Client, messages: twilio_messages) }
+  let(:twilio_messages) { instance_double(Twilio::REST::Api::V2010::AccountContext::MessageList, create: twilio_response) }
 
   before do
     allow(Twilio::REST::Client).to receive(:new).and_return(twilio_client)
