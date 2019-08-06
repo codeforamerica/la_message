@@ -7,11 +7,7 @@ class CampaignMessage
     ::CampaignMessage.descendants
   end
 
-  def self.send_all
-    all_message_classes.each { |message_class| message_class.send_to_contacts }
-  end
-
-  def self.send_to_contacts
+  def self.send_to_recipients
     recipients.find_each do |contact|
       new(contact).send_message
     end

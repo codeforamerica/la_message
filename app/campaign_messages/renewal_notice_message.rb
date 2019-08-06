@@ -2,7 +2,7 @@ class RenewalNoticeMessage < CampaignMessage
   attr_reader :contact
 
   def self.recipients
-    Contact.opted_in.not_received_message(self).where("contacts.created_at < ?", 10.days.ago)
+    Contact.opted_in.not_received_message(self)
   end
 
   def initialize(contact)
@@ -18,7 +18,8 @@ class RenewalNoticeMessage < CampaignMessage
     message = contact.messages.create!(
       message_type: self.class.name,
       to_phone_number: contact.phone_number,
-      body: body
+      body: body,
+      outbound: true
     )
 
     SmsService.send_message(message)
