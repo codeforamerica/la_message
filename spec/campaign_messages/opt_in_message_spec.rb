@@ -42,7 +42,7 @@ RSpec.describe OptInMessage do
         end
       end
     end
-    
+
     context 'negative response' do
       it 'sends a response message' do
         reply_message = Message.new(contact: contact, body: 'no')
