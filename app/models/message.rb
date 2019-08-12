@@ -25,6 +25,10 @@
 class Message < ApplicationRecord
   belongs_to :contact, optional: true
 
+  scope :outbound, -> { where(outbound: true) }
+  scope :inbound, -> { where(outbound: false) }
+  scope :with_type, ->(message_class) { where(message_type: message_class.name) }
+
   def inbound?
     !outbound? unless outbound.nil?
   end

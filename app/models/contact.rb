@@ -15,10 +15,12 @@
 
 class Contact < ApplicationRecord
   has_many :messages, -> { order(created_at: :asc) }
+  has_many :inbound_messages, -> { inbound.order(created_at: :asc) }, class_name: 'Message'
+  has_many :outbound_messages, -> { outbound.order(created_at: :asc) }, class_name: 'Message'
 
   scope :opted_in, -> { where(opted_in: true) }
-  scope :received_message, ->(message_class) { joins(:messages).where(messages: { message_type: message_class.name }).distinct }
-  scope :not_received_message, ->(message_class) { where.not(id: received_message(message_class).select(:id)) }
+  scope :received_message, ->(message_class) { joins(:messages).merge(Message.with_type(message_class)).distinct }
+  scope :not_received_message, ->(message_class) { where.not(id: unscoped.received_message(message_class).select(:id)) }
 
   def phone_number=(value)
     super(PhoneNumber.format(value))
