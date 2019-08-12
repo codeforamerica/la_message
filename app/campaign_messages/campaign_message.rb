@@ -1,4 +1,6 @@
 class CampaignMessage
+  self.abstract_class = true
+
   attr_reader :campaign
 
   def self.recipients
