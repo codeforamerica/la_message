@@ -19,7 +19,7 @@ To authorize:
 aws configure
 
 # Set up ~/.kube/config to connect to the cluster
-aws eks --region us-east-1 update-kubeconfig --name la-message
+aws eks --region us-east-1 update-kubeconfig --name ibi-production
 
 # Check that you can connect to the cluster
 kubectl get svc
