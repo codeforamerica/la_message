@@ -14,7 +14,8 @@ RSpec.describe "Opt In Messages", type: :system do
     contact = Contact.create(
       first_name: "Brian",
       phone_number: "5551231234",
-      renewal_date: "2019/01/05"
+      renewal_date: "2019/01/05",
+      carrier_type: 'mobile'
     )
 
     OptInMessage.send_to_recipients

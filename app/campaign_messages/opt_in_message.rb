@@ -2,7 +2,7 @@ class OptInMessage < CampaignMessage
   attr_reader :contact
 
   def self.recipients
-    Contact.not_received_message(self).where(opted_in: nil)
+    Contact.where(opted_in: nil).mobile.not_received_message(self)
   end
 
   def initialize(contact)
