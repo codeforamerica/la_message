@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe OptInMessage do
   describe '.recipients' do
-    let!(:contact_nil_opt) { Contact.create! opted_in: nil }
-    let!(:contact_false_opt) { Contact.create! opted_in: false }
+    let!(:contact_nil_opt) { Contact.create! opted_in: nil, carrier_type: 'mobile' }
+    let!(:contact_false_opt) { Contact.create! opted_in: false, carrier_type: 'mobile' }
     let!(:contact_received_message) do
       Contact.create!.tap do |c|
         Message.create!(contact: c, message_type: described_class.name)

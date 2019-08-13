@@ -12,7 +12,7 @@ There are two database-backed models:
 
 There is one set of objects called [Campaign Messages](./app/campaign_messages) that define outbound messages, and can optionally handle responses. These all inherit from the base class `CampaignMessage`.
 
-## Developmnent Setup
+## Development Setup
 
 This Ruby on Rails application tries to be as boring as possible. 
 
@@ -29,7 +29,60 @@ You will need, assuming a standard Mac setup:
     - If setting up Postgres.app, you will also need to add the binary to your path. e.g. Add to your `~/.bashrc`: `export PATH="$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin"`
 5. Install system dependencies defined in [Brewfile](./Brewfile) with `$ brew bundle`
 
-## Deployment and Operations
+## Example scripts
+
+Some examples of scripts for running within Rails console (`$ bin/rails c`):
+
+### Importing contacts
+
+```ruby
+require 'csv'
+CSV_PATH = '/path/to/file.csv'
+RENEWAL_DATE = 'August 31, 2019'.to_date
+csv = CSV.open(CSV_PATH, headers: true)
+
+csv.each.with_index do |row, index|
+  next if row['CELLPH_NUM'] == 'NULL'
+
+  contact = Contact.find_or_initialize_by(phone_number: PhoneNumber.format(row['CELLPH_NUM'])) do |c|
+    c.first_name = row['FIRST_NAME']
+    c.last_name = row['LAST_NAME']
+  end
+
+  # Filter out anyone whose name doesn't match an existing record
+  next if contact.first_name != row['FIRST_NAME'] || contact.last_name != row['LAST_NAME']
+
+  contact.renewal_date = RENEWAL_DATE
+  contact.opted_in = true if row['NOTIFICATION_TYPE'] == 'TEXT'
+  contact.save!
+
+  puts "\n\n\n\n==== ROW #{index} ====\n\n\n\n" if index.multiple_of?(10)
+end
+```
+
+### Validating mobile phone numbers
+
+```ruby
+twilio_client = Twilio::REST::Client.new
+
+Contact.where(carrier_type: nil).find_each do |contact|
+  response = twilio_client.lookups.phone_numbers(contact.phone_number).fetch(type: ['carrier']).carrier
+  
+  if response['type'].present?
+    contact.update(carrier_type: response['type'])
+  elsif response['error_code'].present?
+    contact.update(carrier_type: 'error')
+  end     
+rescue Twilio::REST::RestError
+  contact.update(carrier_type: 'error')
+rescue
+  next  
+end
+
+puts Contact.group(:carrier_type).count
+```
+
+## Deployment / Architecture
 
 Briefly:
 

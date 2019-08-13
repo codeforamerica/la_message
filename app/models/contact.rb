@@ -19,6 +19,7 @@ class Contact < ApplicationRecord
   has_many :outbound_messages, -> { outbound.order(created_at: :asc) }, class_name: 'Message'
 
   scope :opted_in, -> { where(opted_in: true) }
+  scope :mobile, -> { where(carrier_type: 'mobile') }
   scope :received_message, ->(message_class) { joins(:messages).merge(Message.with_type(message_class)).distinct }
   scope :not_received_message, ->(message_class) { where.not(id: unscoped.received_message(message_class).select(:id)) }
 
