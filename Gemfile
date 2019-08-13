@@ -38,6 +38,7 @@ end
 group :test do
   gem 'capybara'
   gem 'capybara-email'
+  gem 'climate_control'
   gem 'launchy', require: false
   gem 'rspec_junit_formatter'
   gem 'selenium-webdriver'

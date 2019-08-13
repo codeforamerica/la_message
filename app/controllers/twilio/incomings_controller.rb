@@ -21,10 +21,13 @@ module Twilio
       return if contact.blank?
 
       last_message_type = contact.messages.where.not(message_type: nil).order(created_at: :desc).first&.message_type
-      return if last_message_type.blank?
 
-      campaign_message = last_message_type.constantize.new(contact)
-      campaign_message.on_reply(message)
+      if last_message_type.present?
+        campaign_message = last_message_type.constantize.new(contact)
+        campaign_message.on_reply(message)
+      else
+        NoReplyMessage.new(contact).on_reply(message)
+      end
     end
 
     private

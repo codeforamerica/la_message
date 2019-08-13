@@ -34,6 +34,6 @@ class Message < ApplicationRecord
   end
 
   def inbound=(value)
-    self.outbound = !value
+    self.outbound = value.nil? ? value : !value
   end
 end
