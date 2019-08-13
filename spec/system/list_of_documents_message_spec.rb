@@ -14,7 +14,8 @@ RSpec.describe "List of Documents Message spec Message", type: :system do
     Contact.create(
       first_name: "Brian",
       phone_number: "5551231234",
-      renewal_date: "2019/01/05",
+      documents_due_date: "2019/01/15",
+      documents: ["Document 1", "Document 2"],
       opted_in: true
     )
 
@@ -22,6 +23,8 @@ RSpec.describe "List of Documents Message spec Message", type: :system do
 
     expect(twilio_messages).to have_received(:create) do |args|
       expect(args[:body]).to include "To complete your Medicaid renewal, please submit the following documents by"
+      expect(args[:body]).to include "January 15"
+      expect(args[:body]).to include "* Document 1\n* Document 2"
     end
   end
 end
