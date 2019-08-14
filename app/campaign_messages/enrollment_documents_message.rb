@@ -1,4 +1,4 @@
-class ListOfDocumentsMessage < CampaignMessage
+class EnrollmentDocumentsMessage < CampaignMessage
   def self.recipients
     Contact.opted_in.with_documents_due.not_received_message(self)
   end

@@ -1,4 +1,4 @@
-class RenewalNoticeMessage < CampaignMessage
+class RenewalMessage < CampaignMessage
   def self.recipients
     Contact.opted_in.not_received_message(self)
   end
