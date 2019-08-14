@@ -14,14 +14,14 @@ RSpec.describe "Renewal Message", type: :system do
     allow(SmsService).to receive(:send_message)
   end
 
-  it "sends a Renewal Notice with date" do
-    RenewalNoticeMessage.send_to_recipients
+  it "sends a Renewal message" do
+    RenewalMessage.send_to_recipients
 
     expect(SmsService).to have_received(:send_message) do |message|
       expect(message.to_phone_number).to eq contact.phone_number
       expect(message.body).to include "It's time to renew your household's Medicaid coverage."
       expect(message.body).to include "January 5"
-      expect(message.message_type).to eq "RenewalNoticeMessage"
+      expect(message.message_type).to eq "RenewalMessage"
     end
   end
 end

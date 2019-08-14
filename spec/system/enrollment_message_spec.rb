@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "List of Documents Message spec Message", type: :system do
+RSpec.describe "EnrollmentDocumentsMessage", type: :system do
   let!(:contact) do
     Contact.create(
       first_name: "Brian",
@@ -15,12 +15,13 @@ RSpec.describe "List of Documents Message spec Message", type: :system do
     allow(SmsService).to receive(:send_message)
   end
 
-  it "sends a List of Documents message" do
-    ListOfDocumentsMessage.send_to_recipients
+  it "sends a message" do
+    EnrollmentDocumentsMessage.send_to_recipients
 
     expect(SmsService).to have_received(:send_message) do |message|
       expect(message.body).to include "To complete your Medicaid application, please submit the following documents soon"
       expect(message.body).to include "* Document 1\n* Document 2"
+      expect(message.message_type).to eq "EnrollmentDocumentsMessage"
     end
   end
 end

@@ -36,4 +36,15 @@ class Message < ApplicationRecord
   def inbound=(value)
     self.outbound = value.nil? ? value : !value
   end
+
+  # TODO: remove this backwards-compatibility once database values are updated to new constant names
+  def message_type
+    value = super
+
+    case value
+    when 'RenewalNoticeMessage' then 'RenewalMessage'
+    when 'ListOfDocumentsMessage' then 'EnrollmentDocumentsMessage'
+    else value
+    end
+  end
 end
