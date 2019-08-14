@@ -1,5 +1,5 @@
 class CampaignMessage
-  attr_reader :campaign
+  attr_reader :contact
 
   def self.recipients
     raise 'Not Implemented'
@@ -19,6 +19,7 @@ class CampaignMessage
     @contact = contact
   end
 
-  def on_reply(message)
+  def on_reply(reply_message)
+    NoReplyMessage.new(contact).on_reply(reply_message)
   end
 end

@@ -1,12 +1,6 @@
 class OptInMessage < CampaignMessage
-  attr_reader :contact
-
   def self.recipients
     Contact.where(opted_in: nil).mobile.not_received_message(self)
-  end
-
-  def initialize(contact)
-    @contact = contact
   end
 
   def send_message
@@ -25,8 +19,8 @@ class OptInMessage < CampaignMessage
     SmsService.send_message(message)
   end
 
-  def on_reply(message)
-    clean_reply = message.body.downcase.strip
+  def on_reply(reply_message)
+    clean_reply = reply_message.body.downcase.strip
 
     if clean_reply.match Regexp.union([/\Ay\z/, /yes/i])
       contact.update opted_in: true
@@ -54,6 +48,8 @@ class OptInMessage < CampaignMessage
       )
 
       SmsService.send_message(message)
+    else
+      NoReplyMessage.new(contact).on_reply(reply_message)
     end
   end
 end

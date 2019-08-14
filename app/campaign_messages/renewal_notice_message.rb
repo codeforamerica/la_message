@@ -1,12 +1,6 @@
 class RenewalNoticeMessage < CampaignMessage
-  attr_reader :contact
-
   def self.recipients
     Contact.opted_in.not_received_message(self)
-  end
-
-  def initialize(contact)
-    @contact = contact
   end
 
   def send_message
