@@ -5,8 +5,7 @@ RSpec.describe "EnrollmentDocumentsMessage", type: :system do
     Contact.create(
       first_name: "Brian",
       phone_number: "5551231234",
-      documents_due_date: "2019/01/15",
-      documents: ["Document 1", "Document 2"],
+      enrollment_documents: ["Document 1", "Document 2"],
       opted_in: true
     )
   end
