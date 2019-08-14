@@ -23,7 +23,7 @@ class Contact < ApplicationRecord
   scope :mobile, -> { where(carrier_type: 'mobile') }
   scope :received_message, ->(message_class) { joins(:messages).merge(Message.with_type(message_class)).distinct }
   scope :not_received_message, ->(message_class) { where.not(id: unscoped.received_message(message_class).select(:id)) }
-  scope :with_enrollment_documents, -> { where.not(documents: []) }
+  scope :with_enrollment_documents, -> { where.not(enrollment_documents: []) }
 
   def phone_number=(value)
     super(PhoneNumber.format(value))

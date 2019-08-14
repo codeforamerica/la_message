@@ -39,4 +39,18 @@ RSpec.describe "No reply message", type: :system do
       expect(SmsService).to have_received(:send_message).twice
     end
   end
+
+  context 'When they have recieved multiple campaign messages' do
+    it "uses the latest on_reply" do
+      OptInMessage.new(contact).send_message
+
+      incoming_sms(phone_number: contact.phone_number, body: "Yes")
+
+      EnrollmentDocumentsMessage.new(contact).send_message
+
+      incoming_sms(phone_number: contact.phone_number, body: "No I cannot send those documents")
+
+      expect(contact.reload.opted_in).to eq true
+    end
+  end
 end
