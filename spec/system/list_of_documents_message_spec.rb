@@ -19,8 +19,7 @@ RSpec.describe "List of Documents Message spec Message", type: :system do
     ListOfDocumentsMessage.send_to_recipients
 
     expect(SmsService).to have_received(:send_message) do |message|
-      expect(message.body).to include "To complete your Medicaid renewal, please submit the following documents by"
-      expect(message.body).to include "January 15"
+      expect(message.body).to include "To complete your Medicaid application, please submit the following documents soon"
       expect(message.body).to include "* Document 1\n* Document 2"
     end
   end
