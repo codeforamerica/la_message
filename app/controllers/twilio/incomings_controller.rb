@@ -20,7 +20,7 @@ module Twilio
 
       return if contact.blank?
 
-      last_message_type = contact.messages.where.not(message_type: nil).order(created_at: :desc).first&.message_type
+      last_message_type = contact.messages.where.not(message_type: nil).last&.message_type
 
       if last_message_type.present?
         campaign_message = last_message_type.constantize.new(contact)
