@@ -114,6 +114,12 @@ kubectl config set-context la-message --cluster=ibi-production.us-east-1.eksctl.
   && kubectl config use-context la-message
 ```
 
+Copying a CSV file to the first pod:
+
+```bash
+kubectl cp tmp.csv la-message/$(kubectl get pods --selector=app=web --output=jsonpath='{.items[0].metadata.name}'):tmp.csv
+```
+
 ### Creating a new cluster
 
 The Kubernetes cluster is created with [`eksctl`](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html) which shouldn't be needed once the initial cluster is set up:
