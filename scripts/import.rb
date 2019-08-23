@@ -36,8 +36,5 @@ csv.each.with_index do |row, index|
   contact.opted_in = true if row['NOTIFICATION_TYPE'] == 'TEXT'
   contact.save!
 
-  puts "\n\n\n\n==== ROW #{index} ====\n\n\n\n" if index.multiple_of?(10)
+  puts "\n\n==== ROW #{index} ====\n\n" if index.multiple_of?(100)
 end
-
-# Show unique values of documents
-Contact.select(:documents).map(&:documents).inject(&:+).uniq
