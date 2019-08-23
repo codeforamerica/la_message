@@ -2,17 +2,17 @@
 #
 # Table name: contacts
 #
-#  id           :bigint           not null, primary key
-#  carrier_type :text
-#  documents    :text             default([]), is an Array
-#  first_name   :text
-#  last_name    :text
-#  opted_in     :boolean
-#  phone_number :text
-#  renewal_date :date
-#  response     :text
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id                   :bigint           not null, primary key
+#  carrier_type         :text
+#  enrollment_documents :text             default([]), is an Array
+#  first_name           :text
+#  last_name            :text
+#  opted_in             :boolean
+#  phone_number         :text
+#  renewal_date         :date
+#  response             :text
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
 #
 
 class Contact < ApplicationRecord

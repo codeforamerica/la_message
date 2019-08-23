@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2019_08_23_190333) do
     t.text "first_name"
     t.text "last_name"
     t.text "carrier_type"
-    t.text "documents", default: [], array: true
+    t.text "enrollment_documents", default: [], array: true
     t.text "response"
   end
 

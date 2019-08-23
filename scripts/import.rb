@@ -32,7 +32,7 @@ csv.each.with_index do |row, index|
                   row['DESCRIPTION']
                 end
 
-  contact.documents << description unless contact.documents.include? description
+  contact.enrollment_documents << description unless contact.enrollment_documents.include? description
   contact.opted_in = true if row['NOTIFICATION_TYPE'] == 'TEXT'
   contact.save!
 
