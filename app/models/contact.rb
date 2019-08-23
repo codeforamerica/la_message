@@ -10,6 +10,7 @@
 #  opted_in             :boolean
 #  phone_number         :text
 #  renewal_date         :date
+#  response             :text
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #
@@ -24,6 +25,7 @@ class Contact < ApplicationRecord
   scope :received_message, ->(message_class) { joins(:messages).merge(Message.with_type(message_class)).distinct }
   scope :not_received_message, ->(message_class) { where.not(id: unscoped.received_message(message_class).select(:id)) }
   scope :with_enrollment_documents, -> { where.not(enrollment_documents: []) }
+  scope :no_response, -> { where(response: "no") }
 
   def phone_number=(value)
     super(PhoneNumber.format(value))

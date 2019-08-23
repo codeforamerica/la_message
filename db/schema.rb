@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_14_204804) do
+ActiveRecord::Schema.define(version: 2019_08_23_190333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 2019_08_14_204804) do
     t.text "last_name"
     t.text "carrier_type"
     t.text "enrollment_documents", default: [], array: true
+    t.text "response"
   end
 
   create_table "messages", force: :cascade do |t|
