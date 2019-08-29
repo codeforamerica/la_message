@@ -12,6 +12,7 @@ def save_contact(phone_number, row)
   contact = Contact.find_or_initialize_by(phone_number: PhoneNumber.format(phone_number))
 
   unless contact.carrier_type == "mobile"
+    contact.list = "wagecheck"
     contact.first_name = row["FIRST_NAME"]
     contact.last_name = row["LAST_NAME"]
     contact.opted_in = true if row["NOTIFICATION_TYPE"] == "TEXT"

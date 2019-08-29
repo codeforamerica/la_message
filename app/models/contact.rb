@@ -7,6 +7,7 @@
 #  enrollment_documents :text             default([]), is an Array
 #  first_name           :text
 #  last_name            :text
+#  list                 :text
 #  opted_in             :boolean
 #  phone_number         :text
 #  renewal_date         :date
