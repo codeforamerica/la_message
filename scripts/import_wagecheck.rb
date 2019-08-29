@@ -11,7 +11,7 @@ TWILIO_CLIENT = Twilio::REST::Client.new
 def save_contact(phone_number, row)
   contact = Contact.find_or_initialize_by(phone_number: PhoneNumber.format(phone_number))
 
-  unless contact.carrier_type == "mobile"
+  unless ["mobile", "landline", "voip"].include?(contact.carrier_type)
     contact.list = "wagecheck"
     contact.first_name = row["FIRST_NAME"]
     contact.last_name = row["LAST_NAME"]
