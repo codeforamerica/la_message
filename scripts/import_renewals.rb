@@ -6,7 +6,7 @@ no_count = yes_count = 0
 csv.each.with_index do |row, index|
   next if row['CELLPH_NUM'] == 'NULL'
 
-  if contact = Contact.find_by(phone_number: PhoneNumber.format(row['CELLPH_NUM']))
+  if (contact = Contact.find_by(phone_number: PhoneNumber.format(row['CELLPH_NUM'])))
     contact.response = row['RESPONSE_BY_AUG18'].downcase
     if contact.response == "no"
       no_count += 1

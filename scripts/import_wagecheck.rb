@@ -33,13 +33,10 @@ end
 
 csv = CSV.open(ENV['CSV_PATH'], headers: true)
 csv.each do |row|
-
-  # Try case's phone number first
-  phone_number_case = row['PH_NUM_CASE']
-  unless phone_number_case == "NULL"
-    save_contact(row['PH_NUM_CASE'], row)
-  else # Try application phone number
+  if row['PH_NUM_CASE'] == "NULL"
     save_contact(row['PH_NUM_APP'], row)
+  else
+    save_contact(row['PH_NUM_CASE'], row)
   end
 end
 
