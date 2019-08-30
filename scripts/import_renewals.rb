@@ -7,12 +7,13 @@ csv.each.with_index do |row, index|
   next if row['CELLPH_NUM'] == 'NULL'
 
   if (contact = Contact.find_by(phone_number: PhoneNumber.format(row['CELLPH_NUM'])))
-    contact.response = row['RESPONSE_BY_AUG18'].downcase
+    contact.response = row['RESPONSE_BY_AUG26'].downcase
     if contact.response == "no"
       no_count += 1
     else
       yes_count += 1
     end
+    contact.list = "sept-renewals"
     contact.save!
   end
 
