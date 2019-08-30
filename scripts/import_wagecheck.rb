@@ -9,6 +9,7 @@ require 'csv'
 TWILIO_CLIENT = Twilio::REST::Client.new
 
 def save_contact(phone_number, row)
+  return if phone_number == "0" || PhoneNumber.format(phone_number).nil?
   contact = Contact.find_or_initialize_by(phone_number: PhoneNumber.format(phone_number))
 
   unless ["mobile", "landline", "voip"].include?(contact.carrier_type)
@@ -23,10 +24,14 @@ def save_contact(phone_number, row)
 end
 
 def lookup(phone_number)
-  response = TWILIO_CLIENT.lookups.phone_numbers(phone_number).fetch(type: ['carrier']).carrier
-  if response['type'].present?
-    response['type']
-  elsif response['error_code'].present?
+  begin
+    response = TWILIO_CLIENT.lookups.phone_numbers(phone_number).fetch(type: ['carrier']).carrier
+    if response['type'].present?
+      response['type']
+    elsif response['error_code'].present?
+      "error"
+    end
+  rescue Twilio::REST::RestError
     "error"
   end
 end
