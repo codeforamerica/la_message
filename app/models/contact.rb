@@ -6,6 +6,7 @@
 #  carrier_type         :text
 #  enrollment_documents :text             default([]), is an Array
 #  first_name           :text
+#  lameds_opt_in        :boolean
 #  last_name            :text
 #  list                 :text
 #  opted_in             :boolean
@@ -14,6 +15,7 @@
 #  response             :text
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  individual_id        :text
 #
 
 class Contact < ApplicationRecord
