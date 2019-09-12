@@ -7,7 +7,8 @@ RSpec.describe CampaignMessage do
                                                        EnrollmentDocumentsMessage,
                                                        NoReplyMessage,
                                                        OptInMessage,
-                                                       RenewalMessage
+                                                       RenewalMessage,
+                                                       WagecheckMessage
                                                      )
     end
   end
