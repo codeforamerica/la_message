@@ -12,18 +12,18 @@ def save_contact(phone_number, row)
   return if PhoneNumber.format(phone_number).nil?
 
   contact = Contact.find_or_initialize_by(phone_number: PhoneNumber.format(phone_number))
+  contact.individual_id = row["INDV_ID"]
 
   unless ["mobile", "landline", "voip"].include?(contact.carrier_type)
     contact.list = "oct-renewals"
-    contact.individual_id = row["INDV_ID"]
     contact.first_name = row["FIRST_NAME"]
     contact.last_name = row["LAST_NAME"]
     contact.lameds_opt_in = true if row["NOTIFICATION_TYPE"] == "TEXT"
     contact.opted_in = true if row["NOTIFICATION_TYPE"] == "TEXT"
     contact.carrier_type = lookup(contact.phone_number)
     puts "saving #{contact.last_name} #{contact.carrier_type}..."
-    contact.save
   end
+  contact.save
 end
 
 def lookup(phone_number)
