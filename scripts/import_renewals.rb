@@ -1,24 +1,50 @@
 require File.expand_path('../config/environment', File.dirname(__FILE__))
 require 'csv'
 
-csv = CSV.open(ENV['CSV_PATH'], headers: true)
-no_count = yes_count = 0
-csv.each.with_index do |row, index|
-  next if row['CELLPH_NUM'] == 'NULL'
+# Need to set Twilio ENV vars before running script:
+#
+# $ export TWILIO_ACCOUNT_SID=...
+# $ export TWILIO_AUTH_TOKEN=...
+# # export TWILIO_MESSAGE_SERVICE=...
+TWILIO_CLIENT = Twilio::REST::Client.new
 
-  if (contact = Contact.find_by(phone_number: PhoneNumber.format(row['CELLPH_NUM'])))
-    contact.response = row['RESPONSE_BY_AUG26'].downcase
-    if contact.response == "no"
-      no_count += 1
-    else
-      yes_count += 1
-    end
-    contact.list = "sept-renewals"
-    contact.save!
+def save_contact(phone_number, row)
+  return if PhoneNumber.format(phone_number).nil?
+
+  contact = Contact.find_or_initialize_by(phone_number: PhoneNumber.format(phone_number))
+
+  unless ["mobile", "landline", "voip"].include?(contact.carrier_type)
+    contact.list = "oct-renewals"
+    contact.individual_id = row["INDV_ID"]
+    contact.first_name = row["FIRST_NAME"]
+    contact.last_name = row["LAST_NAME"]
+    contact.lameds_opt_in = true if row["NOTIFICATION_TYPE"] == "TEXT"
+    contact.opted_in = true if row["NOTIFICATION_TYPE"] == "TEXT"
+    contact.carrier_type = lookup(contact.phone_number)
+    puts "saving #{contact.last_name} #{contact.carrier_type}..."
+    contact.save
   end
-
-  puts "\n\n==== ROW #{index} ====\n\n" if index.multiple_of?(100)
 end
 
-puts "# of 'no': #{no_count}"
-puts "# of 'yes': #{yes_count}"
+def lookup(phone_number)
+  begin
+    response = TWILIO_CLIENT.lookups.phone_numbers(phone_number).fetch(type: ['carrier']).carrier
+    if response['type'].present?
+      response['type']
+    elsif response['error_code'].present?
+      "error"
+    end
+  rescue Twilio::REST::RestError
+    "error"
+  end
+end
+
+csv = CSV.open(ENV['CSV_PATH'], headers: true)
+csv.each do |row|
+  if [0, 3, 7].include?(row["SSP_APP_NUM"][-1].to_i)
+    puts row["SSP_APP_NUM"]
+    save_contact(row['CELLPH_NUM'], row)
+  end
+end
+
+puts Contact.where(list: "oct-renewals").group(:carrier_type).count
