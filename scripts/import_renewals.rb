@@ -24,7 +24,6 @@ def save_contact(phone_number, row)
     puts "saving #{contact.last_name} #{contact.carrier_type}..."
     contact.save
   end
-
 end
 
 def lookup(phone_number)
