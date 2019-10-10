@@ -1,6 +1,6 @@
 class RenewalMessage < CampaignMessage
   def self.recipients
-    Contact.opted_in.mobile.where(list: "oct-renewals").not_received_message(self)
+    Contact.opted_in.mobile.where(list: "nov-renewals").not_received_message(self)
   end
 
   def send_message

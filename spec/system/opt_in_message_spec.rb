@@ -6,7 +6,8 @@ RSpec.describe "Opt In Messages", type: :system do
       first_name: "Brian",
       phone_number: "5551231234",
       renewal_date: "2019/01/05",
-      carrier_type: 'mobile'
+      carrier_type: "mobile",
+      segment: 1
     )
   end
 

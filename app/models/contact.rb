@@ -13,6 +13,7 @@
 #  phone_number         :text
 #  renewal_date         :date
 #  response             :text
+#  segment              :integer
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  individual_id        :text

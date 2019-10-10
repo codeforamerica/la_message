@@ -14,7 +14,8 @@ def save_contact(phone_number, row)
   contact = Contact.find_or_initialize_by(phone_number: PhoneNumber.format(phone_number))
 
   unless ["mobile", "landline", "voip"].include?(contact.carrier_type)
-    contact.list = "oct-renewals"
+    contact.list = "nov-renewals"
+    contact.segment = rand(1..12)
     contact.individual_id = row["INDV_ID"]
     contact.first_name = row["FIRST_NAME"]
     contact.last_name = row["LAST_NAME"]
@@ -41,10 +42,7 @@ end
 
 csv = CSV.open(ENV['CSV_PATH'], headers: true)
 csv.each do |row|
-  if [1, 2, 4, 5, 6, 8, 9].include?(row["SSP_APP_NUM"][-1].to_i)
-    puts row["SSP_APP_NUM"]
-    save_contact(row['CELLPH_NUM'], row)
-  end
+  save_contact(row['CELLPH_NUM'], row)
 end
 
-puts Contact.where(list: "oct-renewals").group(:carrier_type).count
+puts Contact.where(list: "nov-renewals").group(:carrier_type).count
