@@ -6,7 +6,7 @@ RSpec.describe "Renewal Message", type: :system do
       first_name: "Brian",
       phone_number: "5551231234",
       renewal_date: "2019/01/05",
-      list: "oct-renewals",
+      list: "nov-renewals",
       carrier_type: "mobile",
       opted_in: true
     )
