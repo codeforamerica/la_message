@@ -4,10 +4,19 @@ class RenewalMessage < CampaignMessage
   end
 
   def send_message
-    body = "It's time to renew your household's Medicaid coverage. "\
-           "To keep getting Medicaid, complete your renewal by #{renewal_date}. "\
-           "You can now renew online at sspweb.lameds.ldh.la.gov/selfservice "\
-           "You can also renew over the phone on week days 8am-5pm at 1-888-342-6207."
+    return if contact.segment.nil?
+
+    body = if (1..6).include?(contact.segment) # Friendly Tone
+             "Hi, Medicaid here. It's time to renew your household's Medicaid coverage. "\
+             "To keep getting Medicaid, you'll need to complete your renewal by #{renewal_date}. "\
+             "You can renew online at sspweb.lameds.ldh.la.gov/selfservice/ "\
+             "You can also renew over the phone on week days 8am-5pm at 1-888-342-6207."
+           else # Urgent Tone
+             "Your household's Medicaid coverage is expiring. "\
+             "To keep getting Medicaid, you must complete your renewal by #{renewal_date}. "\
+             "You can renew online at sspweb.lameds.ldh.la.gov/selfservice/ "\
+             "You can also renew over the phone on week days 8am-5pm at 1-888-342-6207."
+           end
 
     message = contact.messages.create!(
       message_type: self.class.name,
