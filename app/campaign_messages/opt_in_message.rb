@@ -6,24 +6,20 @@ class OptInMessage < CampaignMessage
   def send_message
     return if contact.segment.nil?
 
-    body = if (1..3).include?(contact.segment)
+    body = if (1..4).include?(contact.segment)
              "Louisiana Medicaid is testing out a text message reminder program. "\
              "Would you like to receive reminders, notices and confirmations about the enrollment and renewal processes? "\
              "These texts will be in addition to any letters and calls you already receive. "\
              "Please reply with YES or NO. You can opt out of the service at any time."
-           elsif (4..6).include?(contact.segment)
+           elsif (5..8).include?(contact.segment)
              "Would you like Louisiana Medicaid to send you reminders about the enrollment and renewal processes? "\
-             "These texts will be in addition to any letters and calls you already receive. "\
-             "Please reply with YES or NO. You can opt out of the service at any time."
-           elsif (7..9).include?(contact.segment)
-             "Would you like to get text messages from Louisiana Medicaid? "\
-             "We’ll send you important reminders about your case. "\
              "These texts will be in addition to any letters and calls you already receive. "\
              "Please reply with YES or NO. You can opt out of the service at any time."
            else
              "Would you like to get text messages from Louisiana Medicaid? "\
-             "These texts will be in addition to any letters and calls you already get. "\
-             "Reply with YES or NO. You can stop the messages at any time."
+             "We’ll send you important reminders about your case. "\
+             "These texts will be in addition to any letters and calls you already receive. "\
+             "Please reply with YES or NO. You can opt out of the service at any time."
            end
 
     message = contact.messages.create!(
