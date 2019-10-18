@@ -1,6 +1,6 @@
 class EnrollmentDocumentsMessage < CampaignMessage
   def self.recipients
-    Contact.opted_in.with_enrollment_documents.not_received_message(self)
+    Contact.mobile.opted_in.where(list: "oct-apps").with_enrollment_documents.not_received_message(self)
   end
 
   def send_message

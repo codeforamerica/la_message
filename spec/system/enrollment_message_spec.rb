@@ -6,6 +6,9 @@ RSpec.describe "EnrollmentDocumentsMessage", type: :system do
       first_name: "Brian",
       phone_number: "5551231234",
       enrollment_documents: ["Document 1", "Document 2"],
+      segment: 1,
+      list: "oct-apps",
+      carrier_type: 'mobile',
       opted_in: true
     )
   end
