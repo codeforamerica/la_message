@@ -1,6 +1,6 @@
 class EnrollmentDocumentsMessage < CampaignMessage
   def self.recipients
-    Contact.mobile.opted_in.where(list: "oct-apps").with_enrollment_documents
+    Contact.mobile.opted_in.where(list: "oct-apps", response: "no").with_enrollment_documents
   end
 
   def send_message
