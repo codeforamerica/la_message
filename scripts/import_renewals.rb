@@ -14,7 +14,7 @@ def save_contact(phone_number, row)
   contact = Contact.find_or_initialize_by(phone_number: PhoneNumber.format(phone_number))
 
   unless ["mobile", "landline", "voip"].include?(contact.carrier_type)
-    contact.list = "nov-renewals"
+    contact.list = "dec-renewals"
     contact.segment = rand(1..12)
     contact.individual_id = row["INDV_ID"]
     contact.first_name = row["FIRST_NAME"]
@@ -45,4 +45,4 @@ csv.each do |row|
   save_contact(row['CELLPH_NUM'], row)
 end
 
-puts Contact.where(list: "nov-renewals").group(:carrier_type).count
+puts Contact.where(list: "dec-renewals").group(:carrier_type).count
