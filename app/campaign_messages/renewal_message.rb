@@ -1,6 +1,6 @@
 class RenewalMessage < CampaignMessage
   def self.recipients
-    Contact.opted_in.mobile.where(list: "nov-renewals", response: "No Packet Returned")
+    Contact.opted_in.mobile.where(list: "dec-renewals")
   end
 
   def send_message
@@ -8,11 +8,11 @@ class RenewalMessage < CampaignMessage
 
     body = if (1..6).include?(contact.segment) # Friendly Tone
              "Hi, friendly reminder from Medicaid. "\
-             "To keep getting Medicaid, you'll need to complete your renewal by #{renewal_date}. "\
+             "To keep getting Medicaid, you'll need to complete your renewal by November 30. "\
              "You can renew online at sspweb.lameds.ldh.la.gov/selfservice/ "\
              "You can also renew over the phone on week days 8am-5pm at 1-888-342-6207."
            else # Urgent Tone
-             "You need to complete your Medicaid renewal by #{renewal_date}. "\
+             "You need to complete your Medicaid renewal by November 30. "\
              "You can renew online at sspweb.lameds.ldh.la.gov/selfservice/ "\
              "You can also renew over the phone on week days 8am-5pm at 1-888-342-6207."
            end
