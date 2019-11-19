@@ -8,7 +8,8 @@ RSpec.describe CampaignMessage do
                                                        NoReplyMessage,
                                                        OptInMessage,
                                                        RenewalMessage,
-                                                       WagecheckMessage
+                                                       WagecheckMessage,
+                                                       SurveyMessage
                                                      )
     end
   end
