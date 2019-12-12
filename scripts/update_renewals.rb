@@ -13,4 +13,4 @@ csv.each.with_index do |row, index|
   puts "\n\n==== ROW #{index} ====\n\n" if index.multiple_of?(1000)
 end
 
-puts Contact.where(list: "nov-renewals").group(:response).count
+puts Contact.where(list: "dec-renewals").group(:response).count
