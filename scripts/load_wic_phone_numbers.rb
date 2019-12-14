@@ -7,11 +7,12 @@ csv.each do |row|
     phone_number: PhoneNumberFormatter.format(row["phone_number"])
   )
 
-  sms_deliverable = if row["invalid"] == "Y"
-    "no"
-  else
-    "yes"
-  end
+  sms_deliverable =
+    if row["invalid"] == "Y"
+      "no"
+    else
+      "yes"
+    end
 
   phone_number.update_attributes(
     wic_id: row["wic_id"],

@@ -19,7 +19,7 @@ docker-push:
 
 kube-migrate:
 	kubectl create -f ops/kubernetes/migrate.yml
-	kubectl wait --for=condition=Complete --timeout=30s job/migrate # kubectl explain job.status.conditions
+	kubectl wait --for=condition=Complete --timeout=60s job/migrate # kubectl explain job.status.conditions
 	kubectl logs $(JOB_POD)
 	kubectl delete job migrate
 
@@ -33,4 +33,3 @@ kube-bash:
 
 kube-copy-to-remote:
 	kubectl cp $(FROM) $(WEB_POD):$(TO)
-
