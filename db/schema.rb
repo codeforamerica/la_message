@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_10_190032) do
+ActiveRecord::Schema.define(version: 2019_12_13_235743) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,22 @@ ActiveRecord::Schema.define(version: 2019_10_10_190032) do
     t.text "error_message"
     t.index ["contact_id"], name: "index_messages_on_contact_id"
     t.index ["twilio_id"], name: "index_messages_on_twilio_id", unique: true
+  end
+
+  create_table "phone_numbers", force: :cascade do |t|
+    t.string "phone_number"
+    t.string "wic_id"
+    t.string "snap_id"
+    t.string "tanf_id"
+    t.string "medicaid_id"
+    t.string "first_name"
+    t.string "last_name"
+    t.integer "sms_deliverable", default: 0
+    t.boolean "opt_in", default: false
+    t.boolean "wic_opt_in", default: false
+    t.boolean "medicaid_opt_in", default: false
+    t.boolean "snap_opt_in", default: false
+    t.boolean "tanf_opt_in", default: false
   end
 
 end
