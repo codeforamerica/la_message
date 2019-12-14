@@ -1,4 +1,4 @@
-module PhoneNumber
+module PhoneNumberFormatter
   def self.format(phone_number_string)
     return phone_number_string unless phone_number_string.present?
 

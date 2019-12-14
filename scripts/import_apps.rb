@@ -9,9 +9,9 @@ require 'csv'
 TWILIO_CLIENT = Twilio::REST::Client.new
 
 def save_contact(phone_number, row)
-  return if PhoneNumber.format(phone_number).nil?
+  return if PhoneNumberFormatter.format(phone_number).nil?
 
-  contact = Contact.find_or_initialize_by(phone_number: PhoneNumber.format(phone_number))
+  contact = Contact.find_or_initialize_by(phone_number: PhoneNumberFormatter.format(phone_number))
 
   unless ["mobile", "landline", "voip"].include?(contact.carrier_type)
     contact.list = "oct-apps"

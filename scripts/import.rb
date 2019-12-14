@@ -5,7 +5,7 @@ csv = CSV.open(ENV['CSV_PATH'], headers: true)
 csv.each.with_index do |row, index|
   next if row['CELLPH_NUM'] == 'NULL'
 
-  contact = Contact.find_or_initialize_by(phone_number: PhoneNumber.format(row['CELLPH_NUM'])) do |c|
+  contact = Contact.find_or_initialize_by(phone_number: PhoneNumberFormatter.format(row['CELLPH_NUM'])) do |c|
     c.first_name = row['FIRST_NAME']
     c.last_name = row['LAST_NAME']
   end

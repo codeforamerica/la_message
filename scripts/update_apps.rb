@@ -2,9 +2,9 @@ require File.expand_path('../config/environment', File.dirname(__FILE__))
 require 'csv'
 
 def save_contact(phone_number, row)
-  return if PhoneNumber.format(phone_number).nil?
+  return if PhoneNumberFormatter.format(phone_number).nil?
 
-  if (contact = Contact.find_by(phone_number: PhoneNumber.format(phone_number)))
+  if (contact = Contact.find_by(phone_number: PhoneNumberFormatter.format(phone_number)))
     contact.response = row['VERIFICATION_PENDING'] == "Yes" ? "no" : "yes"
     puts "#{contact.phone_number}: #{contact.response}"
     contact.save

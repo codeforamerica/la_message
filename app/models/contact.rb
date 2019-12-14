@@ -32,6 +32,6 @@ class Contact < ApplicationRecord
   scope :no_response, -> { where(response: "no") }
 
   def phone_number=(value)
-    super(PhoneNumber.format(value))
+    super(PhoneNumberFormatter.format(value))
   end
 end

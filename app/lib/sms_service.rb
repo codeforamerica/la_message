@@ -26,7 +26,7 @@ class SmsService
     twilio_client = Twilio::REST::Client.new
     twilio_client.messages.create(
       messaging_service_sid: Rails.application.secrets.twilio_message_service,
-      to: PhoneNumber.format(to),
+      to: PhoneNumberFormatter.format(to),
       body: body
       # status_callback: nil
     )
