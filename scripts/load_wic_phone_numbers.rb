@@ -14,11 +14,20 @@ csv.each do |row|
       "yes"
     end
 
+  wic_opt_in =
+    if row["opt_in"] == "Y"
+      "yes"
+    elsif row["opt_in"] == "N"
+      "no"
+    else
+      "no_response"
+    end
+
   phone_number.update_attributes(
     wic_id: row["wic_id"],
     first_name: row["first_name"].titlecase,
     last_name: row["last_name"].titlecase,
-    wic_opt_in: row["opt_in"] == "Y",
+    wic_opt_in: wic_opt_in,
     sms_deliverable: sms_deliverable
   )
 end

@@ -11,11 +11,19 @@ Contact.all.each do |contact|
                       "no"
                     end
 
+  medicaid_opt_in = if contact.opted_in == true
+                      "yes"
+                    elsif contact.opted_in == false
+                      "no"
+                    else
+                      "no_response"
+                    end
+
   phone_number.update_attributes(
     medicaid_id: contact.individual_id || Digest::MD5.hexdigest(contact.phone_number + contact.last_name),
     first_name: contact.first_name.titlecase,
     last_name: contact.last_name.titlecase,
-    medicaid_opt_in: contact.opted_in || false,
+    medicaid_opt_in: medicaid_opt_in,
     sms_deliverable: sms_deliverable
   )
 end

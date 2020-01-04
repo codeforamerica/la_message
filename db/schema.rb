@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_13_235743) do
+ActiveRecord::Schema.define(version: 2020_01_03_224838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,10 +59,10 @@ ActiveRecord::Schema.define(version: 2019_12_13_235743) do
     t.string "last_name"
     t.integer "sms_deliverable", default: 0
     t.boolean "opt_in", default: false
-    t.boolean "wic_opt_in", default: false
-    t.boolean "medicaid_opt_in", default: false
-    t.boolean "snap_opt_in", default: false
-    t.boolean "tanf_opt_in", default: false
+    t.integer "medicaid_opt_in", default: 0
+    t.integer "wic_opt_in", default: 0
+    t.integer "snap_opt_in", default: 0
+    t.integer "tanf_opt_in", default: 0
   end
 
 end
